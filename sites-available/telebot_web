@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    server_name telebot www.telebot;
+    access_log /var/log/nginx/telebot_web.access.log;
+    error_log /var/log/nginx/telebot_web.error.log;
+
+location / {
+  include proxy_params;
+  proxy_pass http://unix:/var/www/tele_bot/app.sock;
+    }
+}

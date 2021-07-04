@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+  <title>Dashboard</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="../static/dashboard.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark bg-dark sticky-top flex-md-nowrap p-0 " role="navigation">
+    <a class="navbar-brand  col-md-4 col-lg-4 col-xl-3 mr-0">
+      <h4>Climate camera admin</h4>
+    </a>
+    <div class="text-light col-md-6 col-lg-6 col-xl-8 ">
+
+      {% if b_status %}
+      <h5>Status : Telegram Bot is working </h5>
+      {% else %}
+      <h5>Status : Bot is not working, <a href="/enablebot">click here to enable</a></h5>
+      {% endif %}
+
+      </h5>
+    </div>
+    <div class="btn-group col-md-2 col-lg-2 col-xl-1">
+      <button class="dropdown-toggle btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        MENU
+      </button>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href='/logout'>Signout</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="/getchangepass">Change password</a>
+        <div class="dropdown-divider"></div>
+        {% if b_status %}
+        <a class="dropdown-item" href='/disablebot'>Disable Bot</a>
+        {% else %}
+        <a class="dropdown-item" href='/enablebot'>Enable Bot</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="container-fluid" wfd-id="0">
+    <div class="row" wfd-id="1">
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <form role="form" method="post" action="/change_p">
+
+          <div class="row">
+            <div class="col-9">
+              <h2>Parameters kamera</h2>
+            </div>
+            <div class="col-3">
+              <button type="submit" class="btn btn-primary mb-2">Confirm </button>
+            </div>
+          </div>
+
+          <div class="table-responsive" wfd-id="2">
+            <table class="table table-striped table-sm table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th>#</th>
+                  <th>Names</th>
+                  <th>Values</th>
+                  <th>On message</th>
+                  <!-- <th>Change</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                {% for paraVal in paraTable %}
+                <tr>
+                  <td>{{paraVal[0]}}</td>
+                  <td>{{paraVal[1]}}</td>
+                  <td>{{paraVal[2]}}</td>
+                  <!-- <td>{{paraVal[3]}}</td> -->
+                  {% if paraVal[3] %}
+                  <td>
+                    <input class="form-check-input" type="checkbox" value="{{paraVal[1]}}" id="check_p" name='chk_p'
+                      checked>
+                    <label class="form-check-label" for="check_p">On message</label>
+                  </td>
+                  {% else %}
+                  <td>
+                    <input class="form-check-input" type="checkbox" value="{{paraVal[1]}}" id="check_p" name="chk_p">
+                    <label class="form-check-label" for="check_p">On message</label>
+                  </td>
+                  {% endif %}
+                  <!-- <td><a href= "{{url_for('change_p', id = paraVal[1])}}">Change</a></td> -->
+                </tr>
+
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <hr>
+        <form role="form" method="post" action="/change_u">
+          <div class="row">
+            <div class="col-9">
+              <h2>User permission</h2>
+            </div>
+            <div class="col-3">
+              <button type="submit" class="btn btn-primary mb-2">Confirm </button>
+            </div>
+          </div>
+          <div class="table-responsive" wfd-id="2">
+            <table class="table table-striped table-sm table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th>#</th>
+                  <th>User ID</th>
+                  <th>User Name</th>
+                  <th>Register time</th>
+                  <th>Expiration time</th>
+                  <th>Permission</th>
+                  <th>Comment</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user_id in usertable %}
+                <tr>
+                  <td class="align-middle">{{usertable[user_id]['id']}}</td>
+                  <td class="align-middle">{{user_id}}</td>
+                  <td class="align-middle">{{usertable[user_id]['user_name']}}</td>
+                  <td class="align-middle">{{usertable[user_id]['time_create']}}</td>
+                  <td class="align-middle">
+
+                    <div class="form-group-sm col-8">
+                      <input type="datetime-local" name="extime" value="{{usertable[user_id]['expiration']}}"
+                        max="2050-12-31" min="1970-01-01" class="form-control">
+                    </div>
+
+                  </td>
+                  {% if usertable[user_id]['permission'] %}
+                  <td class="align-middle">
+                    <input class="form-check-input" type="checkbox" value="{{user_id}}" name="chk" checked>
+                    <label class="form-check-label" for="check_u">Send</label>
+                  </td>
+                  {% else %}
+                  <td>
+                    <input class="form-check-input" type="checkbox" value="{{user_id}}" name="chk">
+                    <label class="form-check-label" for="check_u">Send</label>
+                  </td>
+                  {% endif %}
+                  <td>
+                    <input class="form-control" type="text" name="text"
+                      value="{{usertable[user_id]['comment']}}"></input>
+                  </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <hr>
+        <form role="form" method="post" action="/change_t">
+          <div>
+            <div class="row">
+              <div class="col-6">
+                <h3> Config time values:</h3>
+              </div>
+              <div class="col-2">
+                <!-- <a class="btn btn-secondary" href="{{url_for('change_t')}}" role="button">Change</a> -->
+                <button type="submit" class="btn btn-primary mb-2">Confirm </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+              </div>
+
+              <div class="col-4">
+                <label class='h6'>- Time between cycles :</label>
+              </div>
+
+              <div class="col-2">
+                <input type="text" name="timecycle" id="timecycle" class="form-control" value="{{time_cycle}}"
+                  required="">
+
+              </div>
+              <div class="col-4">
+                <h6>seconds</h6>
+              </div>
+
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-2">
+              </div>
+              <div class="col-4 ">
+                <label class='h6'>- Time between requests :</label>
+              </div>
+              <div class="col-2">
+                <input type="text" name="timereq" class="form-control" value="{{time_req}}" title="ádfsdf" required="">
+              </div>
+              <div class="col-4">
+                <h6>seconds</h6>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="card-footer text-center text-muted">
+          <p>© 1997—2020 MAI - №3 - K307</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="../static/assets/dist/js/jquery-3.2.1.slim.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../static/assets/js/vendor/popper.min.js"><\/script>')</script>
+  <script src="../static/assets/js/vendor/popper.min.js"></script>
+  <script src="../static/assets/dist/js/bootstrap.min.js"></script>
+  <!-- Icons -->
+  <script src="../static/assets/dist/js/feather.min.js"></script>
+  <script>
+    feather.replace()
+  </script>
+</body>
+
+</html>

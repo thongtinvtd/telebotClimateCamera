@@ -1,0 +1,15 @@
+Description=telebot.service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/tele_bot
+Environment="PATH=/var/www/tele_bot/venv/bin"
+ExecStart=/var/www/tele_bot/venv/bin/python3 ups.py
+# Auto-restart service when it is crashed
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

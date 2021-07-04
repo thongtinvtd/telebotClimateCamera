@@ -1,0 +1,11 @@
+wheel
+Flask
+mysql-connector-python
+requests
+uwsgi
+smbus
+OrangePi.GPIO
+gunicorn
+python-dotenv
+lxml
+cssselect
